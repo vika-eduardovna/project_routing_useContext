@@ -1,35 +1,51 @@
-import React from 'react'
+import React, { useContext } from 'react'
+import { Context } from '../../context'
 import s from './style.module.sass'
-import Button from '../../components/UI/Button'
+import Select from 'react-select'
+import ToDoItem from '../../components/ToDoItem'
+
 
 
 export default function AddDeal() {
 
+  const { addDeals, deals } = useContext(Context);
+
+  const day_options = [
+    { value: 1, label: 'Monday' },
+    { value: 2, label: 'Tuesday' },
+    { value: 3, label: 'Wednesday' },
+    { value: 4, label: 'Thursday' },
+    { value: 5, label: 'Friday' },
+    { value: 6, label: 'Saturday' },
+    { value: 7, label: 'Sunday' },
+  ];
+
   const submit = e => {
     e.preventDefault();
-    const {title, day} = e.target;
-    console.log(title.value, day.value);
+    const { title, day } = e.target;
+    addDeals(title.value, day.value);
     title.value = '';
     day.value = '';
+    
   }
   return (
-    <div className={s.container}>
-      <form onSubmit={submit} className={s.form}>
+    <form onSubmit={submit} className={s.container}>
+      <div className={s.form} >
         <input type="text" name='title' placeholder='title' />
-        <select name="day" placeholder='The day of he week'>
-          <option value="1">Monday</option>
-          <option value="2">Tuesday</option>
-          <option value="3">Wednesday</option>
-          <option value="4">Thursday</option>
-          <option value="5">Friday</option>
-          <option value="6">Saturday</option>
-          <option value="7">Sunday</option>
-      </select>
-      <Button>Add</Button>
-    </form>
-    <div className={s.deals_box}>
+        <Select
+          className={s.select}
+          placeholder='Choose the day...'
+          name='day'
+          options={day_options} />
+        <button className={s.button}>Add</button>
+      </div>
+      <div className={s.deals_box}>
+        {
+          deals.map(el => <ToDoItem key={el.day} {...el}/>)
+        }
 
-    </div>
-    </div>
+      </div>
+    </form> 
+    
   )
 }
